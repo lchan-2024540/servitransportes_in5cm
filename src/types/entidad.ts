@@ -2,9 +2,6 @@ export interface EntidadConfig {
     ruta: string;
     tabla: string;
 }
-
-// ruta: como se llama en la url (/api/clientes)
-// tabla: como se llama la tabla en postgresql (cliente)
 export const entidades: EntidadConfig[] = [
     { ruta: 'clientes', tabla: 'cliente' },
     { ruta: 'conductores', tabla: 'conductor' },
