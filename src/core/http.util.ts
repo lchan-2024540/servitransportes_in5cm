@@ -10,6 +10,7 @@ export function enviarJson(res: ServerResponse, statusCode: number, datos: unkno
     res.end(JSON.stringify(datos));
 }
 
+
 export function leerCuerpo(req: IncomingMessage): Promise<Record<string, unknown>> {
     return new Promise((resolve, reject) => {
         let cuerpo = '';
