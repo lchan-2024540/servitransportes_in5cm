@@ -3,10 +3,10 @@ import { entidades } from '../types/entidad';
 import { enviarJson, leerCuerpo } from '../core/http.util';
 import { obtenerTodos, obtenerPorId, crear, actualizar, eliminar } from '../core/crud.service';
 
-// las rutas siguen el patron: /api/<entidad>  y  /api/<entidad>/<id>
+
 export async function manejarPeticion(req: IncomingMessage, res: ServerResponse) {
     const url = new URL(req.url || '/', `http://${req.headers.host}`);
-    const segmentos = url.pathname.split('/').filter(Boolean); // ej: ['api', 'clientes', '3']
+    const segmentos = url.pathname.split('/').filter(Boolean); 
 
     if (req.method === 'OPTIONS') {
         enviarJson(res, 204, {});
