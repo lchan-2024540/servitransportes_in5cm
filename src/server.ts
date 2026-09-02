@@ -4,7 +4,9 @@ import { manejarPeticion } from './routes/router';
 
 dotenv.config();
 
+
 const PUERTO = process.env.PORT || 3000;
+
 
 const servidor = http.createServer((req, res) => {
     manejarPeticion(req, res);
