@@ -1,8 +1,5 @@
 import { pool } from '../config/db';
 
-// servicio generico de crud, reutilizado por las 10 entidades del sistema
-// cada funcion recibe el nombre de la tabla y opera sobre ella
-
 export async function obtenerTodos(tabla: string) {
     const resultado = await pool.query(`select * from ${tabla} order by id`);
     return resultado.rows;
