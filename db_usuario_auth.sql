@@ -11,21 +11,29 @@ create table if not exists usuario (
     email varchar(100) not null unique,
     telefono varchar(20),
     password_hash varchar(255) not null,
+    rol varchar(20) not null default 'conductor' check (rol in ('admin', 'conductor')),
     fecha_registro timestamp default now()
 );
+
+-- si la tabla usuario ya existia de una version anterior sin la columna rol,
+-- esto la agrega sin afectar los usuarios ya registrados (quedan como 'conductor')
+alter table usuario add column if not exists rol varchar(20) not null default 'conductor';
+alter table usuario drop constraint if exists usuario_rol_check;
+alter table usuario add constraint usuario_rol_check check (rol in ('admin', 'conductor'));
 
 create or replace procedure sp_insertar_usuario(
     p_nombre varchar,
     p_apellido varchar,
     p_email varchar,
     p_telefono varchar,
-    p_password_hash varchar
+    p_password_hash varchar,
+    p_rol varchar default 'conductor'
 )
 language plpgsql
 as $$
 begin
-    insert into usuario (nombre, apellido, email, telefono, password_hash)
-    values (p_nombre, p_apellido, p_email, p_telefono, p_password_hash);
+    insert into usuario (nombre, apellido, email, telefono, password_hash, rol)
+    values (p_nombre, p_apellido, p_email, p_telefono, p_password_hash, p_rol);
 end;
 $$;
 
