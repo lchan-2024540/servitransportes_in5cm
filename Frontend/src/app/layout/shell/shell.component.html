@@ -1,0 +1,32 @@
+<div class="app-shell">
+  <header class="topbar">
+    <app-logo [size]="32"></app-logo>
+
+    <div class="topbar-usuario">
+      @if (authService.usuarioActual(); as usuario) {
+        <span class="usuario-rol-badge">{{ usuario.rol === 'admin' ? 'Administrador' : 'Conductor' }}</span>
+        <span class="usuario-nombre">{{ usuario.nombre }} {{ usuario.apellido }}</span>
+      }
+      <button class="btn-salir" (click)="cerrarSesion()">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <nav>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">
+          <span class="nav-icon"><i class="bi bi-speedometer2"></i></span> Panel
+        </a>
+        @for (entidad of entidades; track entidad.clave) {
+          <a [routerLink]="['/', entidad.clave]" routerLinkActive="active" class="nav-link">
+            <span class="nav-icon"><i class="bi" [ngClass]="entidad.icono"></i></span> {{ entidad.titulo }}
+          </a>
+        }
+      </nav>
+    </aside>
+
+    <main class="contenido">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
