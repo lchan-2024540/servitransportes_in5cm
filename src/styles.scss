@@ -1,0 +1,143 @@
+:root {
+    /* paleta formal: azul marino + acero + dorado apagado */
+    --purple-deep: #16233D;   /* azul marino profundo (antes morado oscuro) */
+    --purple-mid: #2C4A73;    /* azul acero, color de acento principal */
+    --purple-soft: #5B7699;   /* azul acero claro */
+    --lavender: #C7D2DE;      /* gris azulado claro */
+    --lavender-pale: #EEF2F6; /* fondo sutil para hover/focus */
+    --yellow: #B8863E;        /* dorado apagado, acento secundario */
+    --yellow-deep: #96692D;
+    --cream: #F5F6F8;         /* fondo general, gris muy claro */
+    --ink: #1A2233;           /* texto principal, casi negro azulado */
+    --ink-soft: #5B6472;      /* texto secundario */
+    --white: #FFFFFF;
+    --error: #B3392C;
+    --error-bg: #FBEAEA;
+    --success: #1E7145;
+    --success-bg: #E7F6EC;
+    --success-border: #B9E4C5;
+    --border: #DCE1E8;
+    --placeholder: #9AA5B1;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+    height: 100%;
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+}
+
+h1, h2, h3, .brand-name {
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+}
+
+a { color: inherit; }
+
+/* ---------- formularios compartidos (login / registro / crud) ---------- */
+.field { display: flex; flex-direction: column; gap: 7px; }
+
+.field label { font-size: 13px; font-weight: 600; color: var(--ink); }
+
+.field input,
+.field select {
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    border-radius: 8px;
+    padding: 13px 16px;
+    font-size: 14.5px;
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    outline: none;
+    width: 100%;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.field input::placeholder { color: var(--placeholder); }
+
+.field input:focus,
+.field select:focus {
+    border-color: var(--purple-mid);
+    box-shadow: 0 0 0 3px var(--lavender-pale);
+}
+
+.field.invalid input,
+.field.invalid select { border-color: var(--error); }
+
+.field.invalid input:focus,
+.field.invalid select:focus { box-shadow: 0 0 0 3px var(--error-bg); }
+
+.error-msg { font-size: 12.5px; color: var(--error); font-weight: 500; }
+
+.form-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--error-bg);
+    border: 1px solid #F3C6C6;
+    color: var(--error);
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 11px 14px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+}
+
+.form-banner.success {
+    background: var(--success-bg);
+    border-color: var(--success-border);
+    color: var(--success);
+}
+
+.btn-primary {
+    background: var(--purple-mid);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    padding: 13px 20px;
+    font-size: 14.5px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background .15s ease;
+}
+.btn-primary:hover { background: var(--purple-deep); }
+.btn-primary:disabled { opacity: .6; cursor: not-allowed; }
+
+.btn-secondary {
+    background: var(--white);
+    color: var(--ink);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 13px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+}
+.btn-secondary:hover { border-color: var(--purple-soft); background: var(--lavender-pale); }
+
+.btn-danger {
+    background: var(--error-bg);
+    color: var(--error);
+    border: 1.5px solid #F3C6C6;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.btn-danger:hover { background: #F3C6C6; }
+
+/* ---------- tarjetas ---------- */
+.card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+}
