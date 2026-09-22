@@ -2,6 +2,7 @@ export interface EntidadConfig {
     ruta: string;
     tabla: string;
 }
+
 export const entidades: EntidadConfig[] = [
     { ruta: 'clientes', tabla: 'cliente' },
     { ruta: 'conductores', tabla: 'conductor' },

@@ -10,27 +10,18 @@ export function enviarJson(res: ServerResponse, statusCode: number, datos: unkno
     res.end(JSON.stringify(datos));
 }
 
-
 export function leerCuerpo(req: IncomingMessage): Promise<Record<string, unknown>> {
     return new Promise((resolve, reject) => {
         let cuerpo = '';
-
-        req.on('data', (fragmento) => {
-            cuerpo += fragmento;
-        });
-
+        req.on('data', (fragmento) => { cuerpo += fragmento; });
         req.on('end', () => {
-            if (!cuerpo) {
-                resolve({});
-                return;
-            }
+            if (!cuerpo) { resolve({}); return; }
             try {
                 resolve(JSON.parse(cuerpo));
-            } catch (error) {
+            } catch {
                 reject(new Error('el cuerpo de la peticion no es un json valido'));
             }
         });
-
         req.on('error', reject);
     });
 }
