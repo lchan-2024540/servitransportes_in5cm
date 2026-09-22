@@ -1,0 +1,110 @@
+<div class="encabezado">
+  <h1>{{ esEdicion ? 'Editar' : 'Nueva' }} orden de compra</h1>
+  <p>Órdenes de compra</p>
+</div>
+
+@if (mensajeError) {
+  <div class="form-banner show">{{ mensajeError }}</div>
+}
+
+@if (cargando) {
+  <p>Cargando…</p>
+} @else {
+  <div class="card escaner-card">
+    <div class="escaner-encabezado">
+      <i class="bi bi-camera"></i>
+      <div>
+        <p class="escaner-titulo">Escanear orden de compra (opcional)</p>
+        <p class="escaner-subtitulo">Sube o toma una foto del documento; se intentará detectar el NIT y el cliente automáticamente.</p>
+      </div>
+    </div>
+
+    <label class="btn-secondary escaner-boton">
+      <i class="bi bi-upload"></i> Elegir imagen
+      <input type="file" accept="image/*" capture="environment" (change)="escanear($event)" hidden [disabled]="escaneando">
+    </label>
+
+    @if (escaneando) {
+      <p class="escaner-estado">Leyendo imagen… {{ progresoEscaneo }}%</p>
+    }
+
+    @if (clienteDetectado) {
+      <p class="escaner-resultado success"><i class="bi bi-check-circle-fill"></i> Cliente detectado: {{ clienteDetectado }}</p>
+    }
+
+    @if (textoDetectado && !escaneando) {
+      <details class="escaner-texto">
+        <summary>Ver texto detectado por el escáner</summary>
+        <pre>{{ textoDetectado }}</pre>
+      </details>
+    }
+  </div>
+
+  <form [formGroup]="formulario" (ngSubmit)="guardar()" class="card" novalidate>
+    <div class="fila-campos">
+      <div class="field" [class.invalid]="formulario.get('cliente_id')?.invalid && formulario.get('cliente_id')?.touched">
+        <label for="cliente_id">ID cliente *</label>
+        <input id="cliente_id" type="number" formControlName="cliente_id" placeholder="ID cliente">
+      </div>
+
+      <div class="field" [class.invalid]="formulario.get('nit')?.invalid && formulario.get('nit')?.touched">
+        <label for="nit">NIT *</label>
+        <input id="nit" type="text" formControlName="nit" placeholder="NIT">
+      </div>
+
+      <div class="field">
+        <label for="fecha">Fecha</label>
+        <input id="fecha" type="date" formControlName="fecha">
+      </div>
+    </div>
+
+    <div class="items-encabezado">
+      <h3>Materiales / servicios</h3>
+      <button type="button" class="btn-secondary" (click)="agregarItem()">
+        <i class="bi bi-plus-lg"></i> Agregar ítem
+      </button>
+    </div>
+
+    <div class="items-lista" formArrayName="items">
+      @for (item of items.controls; track item; let i = $index) {
+        <div class="item-fila" [formGroupName]="i">
+          <div class="field item-descripcion" [class.invalid]="item.get('descripcion_servicio')?.invalid && item.get('descripcion_servicio')?.touched">
+            <label>Descripción del servicio *</label>
+            <input type="text" formControlName="descripcion_servicio" placeholder="Ej. Acarreo de piedrín 1ra">
+          </div>
+
+          <div class="field item-cantidad" [class.invalid]="item.get('cantidad')?.invalid && item.get('cantidad')?.touched">
+            <label>Cantidad *</label>
+            <input type="number" formControlName="cantidad" placeholder="0">
+          </div>
+
+          <div class="field item-precio" [class.invalid]="item.get('precio_unitario')?.invalid && item.get('precio_unitario')?.touched">
+            <label>Precio unitario *</label>
+            <input type="number" formControlName="precio_unitario" placeholder="0.00">
+          </div>
+
+          <div class="item-subtotal">
+            <label>Subtotal</label>
+            <span>Q {{ subtotal(i).toFixed(2) }}</span>
+          </div>
+
+          <button type="button" class="btn-quitar" (click)="quitarItem(i)" [disabled]="items.length === 1" title="Quitar ítem">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      }
+    </div>
+
+    <div class="total-general">
+      <span>Total de la orden</span>
+      <strong>Q {{ total.toFixed(2) }}</strong>
+    </div>
+
+    <div class="acciones">
+      <button type="submit" class="btn-primary" [disabled]="guardando">
+        {{ guardando ? 'Guardando…' : (esEdicion ? 'Guardar cambios' : 'Crear orden de compra') }}
+      </button>
+      <a routerLink="/ordenes-compra" class="btn-secondary">Cancelar</a>
+    </div>
+  </form>
+}
