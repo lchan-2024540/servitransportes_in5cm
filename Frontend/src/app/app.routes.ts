@@ -1,53 +1,78 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
-import { permisoLecturaGuard, permisoEscrituraGuard } from './core/guards/permiso.guard';
+import { rolGuard } from './core/guards/rol.guard';
 
 export const routes: Routes = [
-    {
-        path: 'login',
-        loadComponent: () => import('./features/auth/login/login.component').then((m) => m.LoginComponent),
-    },
-    {
-        path: 'register',
-        loadComponent: () => import('./features/auth/register/register.component').then((m) => m.RegisterComponent),
-    },
-    {
-        path: '',
-        loadComponent: () => import('./layout/shell/shell.component').then((m) => m.ShellComponent),
-        canActivate: [authGuard],
-        children: [
-            {
-                path: '',
-                loadComponent: () => import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
-            },
-            {
-                path: 'ordenes-compra/nuevo',
-                loadComponent: () => import('./features/entidades/orden-compra-formulario/orden-compra-formulario.component').then((m) => m.OrdenCompraFormularioComponent),
-                canActivate: [permisoEscrituraGuard],
-                data: { entidadClave: 'ordenes-compra' },
-            },
-            {
-                path: 'ordenes-compra/:id/editar',
-                loadComponent: () => import('./features/entidades/orden-compra-formulario/orden-compra-formulario.component').then((m) => m.OrdenCompraFormularioComponent),
-                canActivate: [permisoEscrituraGuard],
-                data: { entidadClave: 'ordenes-compra' },
-            },
-            {
-                path: ':entidad/nuevo',
-                loadComponent: () => import('./features/entidades/entidad-formulario/entidad-formulario.component').then((m) => m.EntidadFormularioComponent),
-                canActivate: [permisoEscrituraGuard],
-            },
-            {
-                path: ':entidad/:id/editar',
-                loadComponent: () => import('./features/entidades/entidad-formulario/entidad-formulario.component').then((m) => m.EntidadFormularioComponent),
-                canActivate: [permisoEscrituraGuard],
-            },
-            {
-                path: ':entidad',
-                loadComponent: () => import('./features/entidades/entidad-lista/entidad-lista.component').then((m) => m.EntidadListaComponent),
-                canActivate: [permisoLecturaGuard],
-            },
-        ],
-    },
-    { path: '**', redirectTo: '' },
+  { path: '', pathMatch: 'full', redirectTo: 'clientes' },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./features/login/login.component').then((m) => m.LoginComponent),
+  },
+  {
+    path: 'registro',
+    loadComponent: () =>
+      import('./features/registro/registro.component').then((m) => m.RegistroComponent),
+  },
+  {
+    path: '',
+    loadComponent: () =>
+      import('./shared/layout/layout.component').then((m) => m.LayoutComponent),
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'clientes',
+        canActivate: [rolGuard('administrador', 'cajero')],
+        loadComponent: () =>
+          import('./features/clientes/clientes-lista/clientes-lista.component').then(
+            (m) => m.ClientesListaComponent
+          ),
+      },
+      {
+        path: 'clientes/nuevo',
+        canActivate: [rolGuard('administrador', 'cajero')],
+        loadComponent: () =>
+          import('./features/clientes/cliente-form/cliente-form.component').then(
+            (m) => m.ClienteFormComponent
+          ),
+      },
+      {
+        path: 'cuentas',
+        loadComponent: () =>
+          import('./features/cuentas/cuentas-lista/cuentas-lista.component').then(
+            (m) => m.CuentasListaComponent
+          ),
+      },
+      {
+        path: 'cuentas/nueva',
+        canActivate: [rolGuard('administrador', 'cajero')],
+        loadComponent: () =>
+          import('./features/cuentas/cuenta-form/cuenta-form.component').then(
+            (m) => m.CuentaFormComponent
+          ),
+      },
+      {
+        path: 'depositos',
+        canActivate: [rolGuard('administrador', 'cajero')],
+        data: { tipo: 'deposito' },
+        loadComponent: () =>
+          import('./features/operaciones/operacion.component').then((m) => m.OperacionComponent),
+      },
+      {
+        path: 'retiros',
+        canActivate: [rolGuard('administrador', 'cajero')],
+        data: { tipo: 'retiro' },
+        loadComponent: () =>
+          import('./features/operaciones/operacion.component').then((m) => m.OperacionComponent),
+      },
+      {
+        path: 'transferencias',
+        loadComponent: () =>
+          import('./features/transferencias/transferencias.component').then(
+            (m) => m.TransferenciasComponent
+          ),
+      },
+    ],
+  },
+  { path: '**', redirectTo: 'clientes' },
 ];
